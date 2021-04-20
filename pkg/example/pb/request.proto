@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package eventbox.example;
+option go_package = "github.com/infraboard/eventbox/pkg/example";
+
+import "github.com/infraboard/mcube/pb/page/page.proto";
+
+// CreateBookRequest 创建Book请求
+message CreateBookRequest {
+    // book名称
+    string name = 1;
+}
+
+// QueryBookRequest 查询Book请求
+message QueryBookRequest {
+    page.PageRequest page = 1;
+    string name = 2;
+}
