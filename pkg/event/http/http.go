@@ -7,7 +7,7 @@ import (
 
 	"github.com/infraboard/eventbox/client"
 	"github.com/infraboard/eventbox/pkg"
-	"github.com/infraboard/eventbox/pkg/example"
+	"github.com/infraboard/eventbox/pkg/event"
 )
 
 var (
@@ -15,7 +15,7 @@ var (
 )
 
 type handler struct {
-	service example.ServiceClient
+	service event.ServiceClient
 }
 
 // Registry 注册HTTP服务路由
@@ -33,10 +33,10 @@ func (h *handler) Config() error {
 		return errors.New("grpc client not initial")
 	}
 
-	h.service = client.Example()
+	h.service = client.Event()
 	return nil
 }
 
 func init() {
-	pkg.RegistryHTTPV1("example", api)
+	pkg.RegistryHTTPV1("event", api)
 }

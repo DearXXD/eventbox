@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package eventbox.event;
+option go_package = "github.com/infraboard/eventbox/pkg/event";
+
+import "github.com/infraboard/protoc-gen-go-ext/extension/tag/tag.proto";
+import "github.com/infraboard/mcube/pb/event/event.proto";
+
+
+// OperateEventSet todo
+message OperateEventSet {
+    int64 total = 1[
+        (google.protobuf.field_tag) = {struct_tag: 'bson:"total" json:"total"'}
+        ];
+    repeated mcube.event.OperateEvent items = 2[
+        (google.protobuf.field_tag) = {struct_tag: 'bson:"items" json:"items"'}
+        ];
+}
+
+message SaveReponse {
+    
+}

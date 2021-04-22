@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package eventbox.event;
+option go_package = "github.com/infraboard/eventbox/pkg/event";
+
+import "pkg/event/pb/request.proto";
+import "pkg/event/pb/reponse.proto";
+import "github.com/infraboard/mcube/pb/http/entry.proto";
+
+service Service {
+	rpc SaveEvent(SaveEventRequest) returns(SaveReponse) {
+		option (mcube.http.rest_api) = {
+			path: "/events/"
+			method: "POST"
+			resource: "event"
+			auth_enable: true
+			permission_enable: true
+			labels: [{
+				key: "action"
+				value: "create"
+			}]
+		};
+	};
+	rpc QueryEvent(QueryEventRequest) returns(OperateEventSet) {
+		option (mcube.http.rest_api) = {
+			path: "/events/"
+			method: "GET"
+			resource: "event"
+			auth_enable: false
+		};
+	};
+}

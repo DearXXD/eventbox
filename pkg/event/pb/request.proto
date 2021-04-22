@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package eventbox.event;
+option go_package = "github.com/infraboard/eventbox/pkg/event";
+
+import "github.com/infraboard/protoc-gen-go-ext/extension/tag/tag.proto";
+import "github.com/infraboard/mcube/pb/page/page.proto";
+import "github.com/infraboard/mcube/pb/event/event.proto";
+
+// SaveEventRequest 保存事件
+message SaveEventRequest {
+    repeated mcube.event.Event items = 1[
+        (google.protobuf.field_tag) = {struct_tag: 'bson:"items" json:"items"'}
+        ];
+}
+
+// QueryEventRequest 查询Book请求
+message QueryEventRequest {
+    page.PageRequest page = 1;
+    string name = 2;
+}

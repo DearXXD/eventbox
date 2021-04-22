@@ -6,7 +6,7 @@ import (
 	"github.com/infraboard/mcube/logger/zap"
 	"google.golang.org/grpc"
 
-	"github.com/infraboard/eventbox/pkg/example"
+	"github.com/infraboard/eventbox/pkg/event"
 )
 
 var (
@@ -46,6 +46,6 @@ type Client struct {
 }
 
 // Example todo
-func (c *Client) Example() example.ServiceClient {
-	return example.NewServiceClient(c.conn)
+func (c *Client) Event() event.ServiceClient {
+	return event.NewServiceClient(c.conn)
 }

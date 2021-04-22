@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/infraboard/eventbox/pkg/example"
+	"github.com/infraboard/eventbox/pkg/event"
 )
 
 func (h *handler) CreateBook(w http.ResponseWriter, r *http.Request) {
@@ -19,10 +19,10 @@ func (h *handler) CreateBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &example.CreateBookRequest{}
+	req := &event.SaveEventRequest{}
 
 	var header, trailer metadata.MD
-	ins, err := h.service.CreateBook(
+	ins, err := h.service.SaveEvent(
 		ctx.Context(),
 		req,
 		grpc.Header(&header),
@@ -44,10 +44,10 @@ func (h *handler) QueryBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	page := request.NewPageRequestFromHTTP(r)
-	req := example.NewQueryBookRequest(page)
+	req := event.NewQueryEventkRequest(page)
 
 	var header, trailer metadata.MD
-	dommains, err := h.service.QueryBook(
+	dommains, err := h.service.QueryEvent(
 		ctx.Context(),
 		req,
 		grpc.Header(&header),

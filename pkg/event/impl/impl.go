@@ -6,7 +6,7 @@ import (
 	"github.com/infraboard/mcube/pb/http"
 
 	"github.com/infraboard/eventbox/pkg"
-	"github.com/infraboard/eventbox/pkg/example"
+	"github.com/infraboard/eventbox/pkg/event"
 )
 
 var (
@@ -15,22 +15,22 @@ var (
 )
 
 type service struct {
-	example.UnimplementedServiceServer
+	event.UnimplementedServiceServer
 
 	log logger.Logger
 }
 
 func (s *service) Config() error {
 	// get global config with here
-	s.log = zap.L().Named("Example")
+	s.log = zap.L().Named("Event")
 	return nil
 }
 
 // HttpEntry todo
 func (s *service) HTTPEntry() *http.EntrySet {
-	return example.HttpEntry()
+	return event.HttpEntry()
 }
 
 func init() {
-	pkg.RegistryService("example", Service)
+	pkg.RegistryService("event", Service)
 }

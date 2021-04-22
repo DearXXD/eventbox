@@ -6,12 +6,12 @@ import (
 	"github.com/infraboard/mcube/pb/http"
 	"google.golang.org/grpc"
 
-	"github.com/infraboard/eventbox/pkg/example"
+	"github.com/infraboard/eventbox/pkg/event"
 )
 
 var (
 	// Example 服务
-	Example example.ServiceServer
+	Event event.ServiceServer
 )
 
 var (
@@ -23,7 +23,7 @@ var (
 
 // InitV1GRPCAPI 初始化GRPC服务
 func InitV1GRPCAPI(server *grpc.Server) {
-	example.RegisterServiceServer(server, Example)
+	event.RegisterServiceServer(server, Event)
 	return
 }
 
@@ -62,11 +62,11 @@ type Service interface {
 // RegistryService 服务实例注册
 func RegistryService(name string, svr Service) {
 	switch value := svr.(type) {
-	case example.ServiceServer:
-		if Example != nil {
+	case event.ServiceServer:
+		if Event != nil {
 			registryError(name)
 		}
-		Example = value
+		Event = value
 		addService(name, svr)
 	default:
 		panic(fmt.Sprintf("unknown service type %s", name))
