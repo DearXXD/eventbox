@@ -7,6 +7,10 @@ func NewSaveEventRequest() *SaveEventRequest {
 	return &SaveEventRequest{}
 }
 
+func (req *SaveEventRequest) Add(item *event.Event) {
+	req.Items = append(req.Items, item)
+}
+
 // NewSaveReponse todo
 func NewSaveReponse() *SaveReponse {
 	return &SaveReponse{}

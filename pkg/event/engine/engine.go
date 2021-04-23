@@ -1,6 +1,8 @@
 package engine
 
 import (
+	"context"
+
 	"github.com/infraboard/mcube/bus"
 	"github.com/infraboard/mcube/bus/event"
 	"github.com/infraboard/mcube/logger"
@@ -36,11 +38,19 @@ func (e *Engine) SetRetryBufSize(s int) {
 }
 
 func (e *Engine) Start() error {
-	return e.b.Sub(event.Type_Operate.String(), e.Hanle)
+	e.l.Info("start engine ...")
+	subT := event.Type_Operate.String()
+	if err := e.b.Sub(subT, e.Hanle); err != nil {
+		return err
+	}
+	e.l.Infof("ok! start sub topic: %s", subT)
+	return nil
 }
 
 func (e *Engine) Hanle(topic string, et *event.Event) error {
-	_, err := e.s.SaveEvent(nil, nil)
+	req := store.NewSaveEventRequest()
+	req.Add(et)
+	_, err := e.s.SaveEvent(context.Background(), req)
 	if err != nil {
 		e.addToRetryBuf(et)
 	}

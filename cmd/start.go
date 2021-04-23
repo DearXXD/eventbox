@@ -10,6 +10,8 @@ import (
 	"syscall"
 
 	"github.com/infraboard/keyauth/client"
+	"github.com/infraboard/mcube/bus"
+	"github.com/infraboard/mcube/bus/broker/nats"
 	"github.com/infraboard/mcube/cache"
 	"github.com/infraboard/mcube/cache/memory"
 	"github.com/infraboard/mcube/cache/redis"
@@ -20,6 +22,7 @@ import (
 	"github.com/infraboard/eventbox/api"
 	"github.com/infraboard/eventbox/conf"
 	"github.com/infraboard/eventbox/pkg"
+	"github.com/infraboard/eventbox/pkg/event/engine"
 
 	// 加载依赖驱动
 	_ "github.com/go-sql-driver/mysql"
@@ -97,18 +100,28 @@ func newService(cnf *conf.Config) (*service, error) {
 	grpc := api.NewGRPCService(auther.AuthUnaryServerInterceptor())
 	http := api.NewHTTPService()
 
+	b, err := nats.NewBroker(nats.NewDefaultConfig())
+	if err != nil {
+		return nil, err
+	}
+	eg := engine.NewEngine(b, pkg.Event)
+
 	svr := &service{
-		grpc: grpc,
-		http: http,
-		log:  zap.L().Named("CLI"),
+		grpc:   grpc,
+		http:   http,
+		engine: eg,
+		log:    zap.L().Named("CLI"),
+		bm:     b,
 	}
 
 	return svr, nil
 }
 
 type service struct {
-	http *api.HTTPService
-	grpc *api.GRPCService
+	http   *api.HTTPService
+	grpc   *api.GRPCService
+	engine *engine.Engine
+	bm     bus.Manager
 
 	log  logger.Logger
 	stop context.CancelFunc
@@ -125,6 +138,12 @@ func (s *service) start() error {
 	} else {
 		s.log.Debug("service endpoints registry success")
 	}
+
+	// 启动事件订阅引擎
+	if err := s.bm.Connect(); err != nil {
+		return err
+	}
+	s.engine.Start()
 
 	go s.grpc.Start()
 	return s.http.Start()
