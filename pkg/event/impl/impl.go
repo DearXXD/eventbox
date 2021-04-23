@@ -1,10 +1,15 @@
 package impl
 
 import (
+	"context"
+
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/infraboard/mcube/pb/http"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/x/bsonx"
 
+	"github.com/infraboard/eventbox/conf"
 	"github.com/infraboard/eventbox/pkg"
 	"github.com/infraboard/eventbox/pkg/event"
 )
@@ -15,13 +20,25 @@ var (
 )
 
 type service struct {
-	event.UnimplementedServiceServer
-
+	col *mongo.Collection
 	log logger.Logger
+
+	event.UnimplementedServiceServer
 }
 
 func (s *service) Config() error {
-	// get global config with here
+	db := conf.C().Mongo.GetDB()
+	col := db.Collection("event")
+	indexs := []mongo.IndexModel{
+		{
+			Keys: bsonx.Doc{{Key: "create_at", Value: bsonx.Int32(-1)}},
+		},
+	}
+	_, err := col.Indexes().CreateMany(context.Background(), indexs)
+	if err != nil {
+		return err
+	}
+	s.col = col
 	s.log = zap.L().Named("Event")
 	return nil
 }

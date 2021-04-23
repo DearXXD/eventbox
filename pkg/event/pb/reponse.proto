@@ -10,13 +10,18 @@ import "github.com/infraboard/mcube/pb/event/event.proto";
 // OperateEventSet todo
 message OperateEventSet {
     int64 total = 1[
-        (google.protobuf.field_tag) = {struct_tag: 'bson:"total" json:"total"'}
+        (google.protobuf.field_tag) = {struct_tag: 'json:"total"'}
         ];
     repeated mcube.event.OperateEvent items = 2[
-        (google.protobuf.field_tag) = {struct_tag: 'bson:"items" json:"items"'}
+        (google.protobuf.field_tag) = {struct_tag: 'json:"items"'}
         ];
 }
 
 message SaveReponse {
-    
+    repeated string success = 1[
+        (google.protobuf.field_tag) = {struct_tag: 'json:"success"'}
+        ];
+    repeated string failed = 2[
+        (google.protobuf.field_tag) = {struct_tag: 'json:"failed"'}
+        ];
 }

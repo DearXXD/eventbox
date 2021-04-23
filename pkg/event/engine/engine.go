@@ -1,10 +1,9 @@
 package engine
 
 import (
-	"context"
-
 	"github.com/infraboard/mcube/bus"
 	"github.com/infraboard/mcube/bus/event"
+	"github.com/infraboard/mcube/grpc/gcontext"
 	"github.com/infraboard/mcube/logger"
 	"github.com/infraboard/mcube/logger/zap"
 
@@ -50,8 +49,10 @@ func (e *Engine) Start() error {
 func (e *Engine) Hanle(topic string, et *event.Event) error {
 	req := store.NewSaveEventRequest()
 	req.Add(et)
-	_, err := e.s.SaveEvent(context.Background(), req)
+	in := gcontext.NewGrpcInCtx()
+	_, err := e.s.SaveEvent(in.Context(), req)
 	if err != nil {
+		e.l.Errorf("save event error, %s", err)
 		e.addToRetryBuf(et)
 	}
 	return nil

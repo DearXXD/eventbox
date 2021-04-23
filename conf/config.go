@@ -8,9 +8,9 @@ import (
 	"time"
 
 	kc "github.com/infraboard/keyauth/client"
-
 	"github.com/infraboard/mcube/cache/memory"
 	"github.com/infraboard/mcube/cache/redis"
+	"github.com/infraboard/mcube/logger/zap"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -43,6 +43,20 @@ type Config struct {
 	Mongo   *mongodb `toml:"mongodb"`
 	Keyauth *keyauth `toml:"keyauth"`
 	Cache   *_cache  `toml:"cache"`
+}
+
+// InitGloabl 注入全局变量
+func (c *Config) InitGloabl() error {
+	// 加载全局配置单例
+	global = c
+
+	// 加载全局数据量单例
+	mclient, err := c.Mongo.getClient()
+	if err != nil {
+		return err
+	}
+	mgoclient = mclient
+	return nil
 }
 
 type app struct {
@@ -195,6 +209,7 @@ func (m *mongodb) getClient() (*mongo.Client, error) {
 		return nil, fmt.Errorf("ping mongodb server(%s) error, %s", m.Endpoints, err)
 	}
 
+	zap.L().Infof("connect to mongo server %s success", m.Endpoints)
 	return client, nil
 }
 
