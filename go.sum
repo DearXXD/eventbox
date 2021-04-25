@@ -415,8 +415,8 @@ github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANyt
 github.com/infraboard/keyauth v0.3.1 h1:DmqbR7eCrwDQLkTxf/6ehNR68kF15Z/ZgiZJl7xJsCU=
 github.com/infraboard/keyauth v0.3.1/go.mod h1:niad70tHSyZNJMYZPwEW7eYvIwFOG9qCTUnokCXcEZo=
 github.com/infraboard/mcube v0.8.8/go.mod h1:EF1AOOTml3DBvezumjITXb+MbMfXK4zKMmCygB9q0UA=
-github.com/infraboard/mcube v0.9.4 h1:wZNaXH4SzRsEvZlFtnaWh4Hw4hbgDaVqTMudcj9CzeI=
-github.com/infraboard/mcube v0.9.4/go.mod h1:EF1AOOTml3DBvezumjITXb+MbMfXK4zKMmCygB9q0UA=
+github.com/infraboard/mcube v0.9.5 h1:Vniyg+wfWubm0CX0BiV4BqVAXgDyrp2IBn+pvcHkKVY=
+github.com/infraboard/mcube v0.9.5/go.mod h1:EF1AOOTml3DBvezumjITXb+MbMfXK4zKMmCygB9q0UA=
 github.com/infraboard/protoc-gen-go-ext v0.0.2 h1:ijHgiWSFS8AzZh9kZK4WKEbaeNSoPvJCQNrhAPE0H7s=
 github.com/infraboard/protoc-gen-go-ext v0.0.2/go.mod h1:HOugbyoABx9qoYfEcn6dOsHogdeRtxXvZOE1yAQWpmk=
 github.com/jcmturner/gofork v1.0.0/go.mod h1:MK8+TM0La+2rjBD4jE12Kj1pCCxK7d2LK/UM3ncEo0o=

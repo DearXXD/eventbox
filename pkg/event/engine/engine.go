@@ -59,6 +59,6 @@ func (e *Engine) Hanle(topic string, et *event.Event) error {
 }
 
 func (e *Engine) addToRetryBuf(et *event.Event) {
-	e.l.Debugf("add event: %s to retry buffer", et.GetID())
+	e.l.Debugf("add event: %s to retry buffer", et.Id)
 	e.retryBuf = append(e.retryBuf, et)
 }

@@ -36,6 +36,10 @@ linux: ## Linux build
 run: install codegen dep build ## Run Server
 	@./dist/${PROJECT_NAME} start
 
+push: ## git push
+	@git push -u gitee
+	@git push
+
 clean: ## Remove previous build
 	@go clean .
 	@rm -f dist/${PROJECT_NAME}

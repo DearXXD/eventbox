@@ -14,7 +14,7 @@ func (req *SaveEventRequest) Add(item *event.Event) {
 func (req *SaveEventRequest) Ids() []string {
 	ids := make([]string, 0, len(req.Items))
 	for i := range req.Items {
-		ids = append(ids, req.Items[i].GetID())
+		ids = append(ids, req.Items[i].Id)
 	}
 
 	return ids
@@ -23,7 +23,7 @@ func (req *SaveEventRequest) Ids() []string {
 func (req *SaveEventRequest) ParseEvent() ([]interface{}, error) {
 	docs := make([]interface{}, 0, len(req.Items))
 	for i := range req.Items {
-		switch req.Items[i].Header.Type {
+		switch req.Items[i].Type {
 		case event.Type_Operate:
 			data := &event.OperateEventData{}
 			err := req.Items[i].ParseBoby(data)
@@ -31,6 +31,9 @@ func (req *SaveEventRequest) ParseEvent() ([]interface{}, error) {
 				return nil, err
 			}
 			oe := &event.OperateEvent{
+				Id:     req.Items[i].Id,
+				Time:   req.Items[i].Time,
+				Type:   req.Items[i].Type,
 				Header: req.Items[i].Header,
 				Body:   data,
 			}
