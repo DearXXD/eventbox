@@ -27,10 +27,10 @@ func HttpEntry() *http.EntrySet {
 				Path:             "/events/",
 				Method:           "GET",
 				Resource:         "event",
-				AuthEnable:       false,
-				PermissionEnable: false,
+				AuthEnable:       true,
+				PermissionEnable: true,
 				AuditLog:         false,
-				Labels:           map[string]string{},
+				Labels:           map[string]string{"action": "list"},
 			},
 		},
 	}

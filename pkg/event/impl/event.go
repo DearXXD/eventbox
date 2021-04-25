@@ -4,7 +4,9 @@ import (
 	"context"
 
 	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/grpc/gcontext"
 
+	"github.com/infraboard/eventbox/pkg"
 	"github.com/infraboard/eventbox/pkg/event"
 )
 
@@ -25,11 +27,11 @@ func (s *service) SaveEvent(ctx context.Context, req *event.SaveEventRequest) (*
 }
 
 func (s *service) QueryEvent(ctx context.Context, req *event.QueryEventRequest) (*event.OperateEventSet, error) {
-	// in, err := gcontext.GetGrpcInCtx(ctx)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// tk := pkg.S().GetToken(in.GetRequestID())
-	// s.log.Debug(tk)
+	in, err := gcontext.GetGrpcInCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+	tk := pkg.S().GetToken(in.GetRequestID())
+	s.log.Debug(tk)
 	return event.NewOperateEventSet(), nil
 }

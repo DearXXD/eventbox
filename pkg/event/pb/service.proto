@@ -27,6 +27,12 @@ service Service {
 			method: "GET"
 			resource: "event"
 			auth_enable: false
+			auth_enable: true
+			permission_enable: true
+			labels: [{
+				key: "action"
+				value: "list"
+			}]
 		};
 	};
 }
