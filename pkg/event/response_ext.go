@@ -64,9 +64,19 @@ func (resp *SaveReponse) AddFailed(ids ...string) {
 	}
 }
 
+func NewOperateEvent() *event.OperateEvent {
+	return &event.OperateEvent{
+		Header: event.NewHeader(),
+	}
+}
+
 // NewOperateEventSet 实例
 func NewOperateEventSet() *OperateEventSet {
 	return &OperateEventSet{
 		Items: []*event.OperateEvent{},
 	}
+}
+
+func (s *OperateEventSet) Add(item *event.OperateEvent) {
+	s.Items = append(s.Items, item)
 }

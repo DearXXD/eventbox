@@ -32,6 +32,32 @@ func (s *service) QueryEvent(ctx context.Context, req *event.QueryEventRequest) 
 		return nil, err
 	}
 	tk := pkg.S().GetToken(in.GetRequestID())
+
+	r := newQueryEventRequest(req)
+	resp, err := s.col.Find(context.TODO(), r.FindFilter(), r.FindOptions())
+
+	if err != nil {
+		return nil, exception.NewInternalServerError("find event error, error is %s", err)
+	}
+
+	set := event.NewOperateEventSet()
+	// 循环
+	for resp.Next(context.TODO()) {
+		d := event.NewOperateEvent()
+		if err := resp.Decode(d); err != nil {
+			return nil, exception.NewInternalServerError("decode event error, error is %s", err)
+		}
+
+		set.Add(d)
+	}
+
+	// count
+	count, err := s.col.CountDocuments(context.TODO(), r.FindFilter())
+	if err != nil {
+		return nil, exception.NewInternalServerError("get event count error, error is %s", err)
+	}
+	set.Total = count
+
 	s.log.Debug(tk)
 	return event.NewOperateEventSet(), nil
 }
