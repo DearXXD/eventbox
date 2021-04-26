@@ -32,6 +32,7 @@ func (s *service) QueryEvent(ctx context.Context, req *event.QueryEventRequest) 
 		return nil, err
 	}
 	tk := pkg.S().GetToken(in.GetRequestID())
+	s.log.Debug(tk)
 
 	r := newQueryEventRequest(req)
 	resp, err := s.col.Find(context.TODO(), r.FindFilter(), r.FindOptions())
@@ -57,7 +58,5 @@ func (s *service) QueryEvent(ctx context.Context, req *event.QueryEventRequest) 
 		return nil, exception.NewInternalServerError("get event count error, error is %s", err)
 	}
 	set.Total = count
-
-	s.log.Debug(tk)
-	return event.NewOperateEventSet(), nil
+	return set, nil
 }

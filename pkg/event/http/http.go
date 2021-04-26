@@ -21,10 +21,9 @@ type handler struct {
 // Registry 注册HTTP服务路由
 func (h *handler) Registry(router router.SubRouter) {
 	r := router.ResourceRouter("event")
-
 	r.BasePath("events")
-	r.Handle("POST", "/", h.CreateBook)
-	r.Handle("GET", "/", h.QueryBook)
+	r.Handle("POST", "/", h.CreateEvent)
+	r.Handle("GET", "/", h.QueryEvent)
 }
 
 func (h *handler) Config() error {

@@ -12,7 +12,7 @@ import (
 	"github.com/infraboard/eventbox/pkg/event"
 )
 
-func (h *handler) CreateBook(w http.ResponseWriter, r *http.Request) {
+func (h *handler) CreateEvent(w http.ResponseWriter, r *http.Request) {
 	ctx, err := gcontext.NewGrpcOutCtxFromHTTPRequest(r)
 	if err != nil {
 		response.Failed(w, err)
@@ -36,7 +36,7 @@ func (h *handler) CreateBook(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func (h *handler) QueryBook(w http.ResponseWriter, r *http.Request) {
+func (h *handler) QueryEvent(w http.ResponseWriter, r *http.Request) {
 	ctx, err := gcontext.NewGrpcOutCtxFromHTTPRequest(r)
 	if err != nil {
 		response.Failed(w, err)
@@ -47,7 +47,7 @@ func (h *handler) QueryBook(w http.ResponseWriter, r *http.Request) {
 	req := event.NewQueryEventkRequest(page)
 
 	var header, trailer metadata.MD
-	dommains, err := h.service.QueryEvent(
+	ins, err := h.service.QueryEvent(
 		ctx.Context(),
 		req,
 		grpc.Header(&header),
@@ -57,6 +57,6 @@ func (h *handler) QueryBook(w http.ResponseWriter, r *http.Request) {
 		response.Failed(w, gcontext.NewExceptionFromTrailer(trailer, err))
 		return
 	}
-	response.Success(w, dommains)
+	response.Success(w, ins)
 	return
 }

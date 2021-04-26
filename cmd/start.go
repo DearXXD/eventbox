@@ -140,10 +140,11 @@ func (s *service) start() error {
 	}
 
 	// 启动事件订阅引擎
-	if err := s.bm.Connect(); err != nil {
-		return err
+	if err := s.bm.Connect(); err == nil {
+		s.engine.Start()
+	} else {
+		s.log.Errorf("connect to bus error, %s", err)
 	}
-	s.engine.Start()
 
 	go s.grpc.Start()
 	return s.http.Start()
@@ -235,10 +236,12 @@ func (s *service) waitSign(sign chan os.Signal) {
 				s.log.Infof("receive signal '%v', start graceful shutdown", v.String())
 
 				// 关闭总线
-				if err := s.bm.Disconnect(); err != nil {
-					s.log.Errorf("bus disconnect error, %s", err)
-				} else {
-					s.log.Infof("bus disconnect complete")
+				if s.bm != nil {
+					if err := s.bm.Disconnect(); err != nil {
+						s.log.Errorf("bus disconnect error, %s", err)
+					} else {
+						s.log.Infof("bus disconnect complete")
+					}
 				}
 
 				// 关闭grpc服务
