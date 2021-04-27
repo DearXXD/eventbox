@@ -32,7 +32,6 @@ func (req *SaveEventRequest) ParseEvent() ([]interface{}, error) {
 			}
 			oe := &event.OperateEvent{
 				Id:     req.Items[i].Id,
-				Time:   req.Items[i].Time,
 				Type:   req.Items[i].Type,
 				Header: req.Items[i].Header,
 				Body:   data,
