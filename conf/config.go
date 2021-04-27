@@ -8,6 +8,9 @@ import (
 	"time"
 
 	kc "github.com/infraboard/keyauth/client"
+	"github.com/infraboard/mcube/bus"
+	"github.com/infraboard/mcube/bus/broker/kafka"
+	"github.com/infraboard/mcube/bus/broker/nats"
 	"github.com/infraboard/mcube/cache/memory"
 	"github.com/infraboard/mcube/cache/redis"
 	"github.com/infraboard/mcube/logger/zap"
@@ -30,19 +33,23 @@ func newConfig() *Config {
 		Mongo:   newDefaultMongoDB(),
 		Cache:   newDefaultCache(),
 		Keyauth: newDefaultKeyauth(),
+		Nats:    nats.NewDefaultConfig(),
+		Kafka:   kafka.NewDefultConfig(),
 	}
 }
 
 // Config 应用配置
 type Config struct {
-	App     *app     `toml:"app"`
-	HTTP    *http    `toml:"http"`
-	GRPC    *grpc    `toml:"grpc"`
-	Log     *log     `toml:"log"`
-	MySQL   *mysql   `toml:"mysql"`
-	Mongo   *mongodb `toml:"mongodb"`
-	Keyauth *keyauth `toml:"keyauth"`
-	Cache   *_cache  `toml:"cache"`
+	App     *app          `toml:"app"`
+	HTTP    *http         `toml:"http"`
+	GRPC    *grpc         `toml:"grpc"`
+	Log     *log          `toml:"log"`
+	MySQL   *mysql        `toml:"mysql"`
+	Mongo   *mongodb      `toml:"mongodb"`
+	Keyauth *keyauth      `toml:"keyauth"`
+	Nats    *nats.Config  `toml:"nats"`
+	Kafka   *kafka.Config `toml:"kafka"`
+	Cache   *_cache       `toml:"cache"`
 }
 
 // InitGloabl 注入全局变量
@@ -57,6 +64,11 @@ func (c *Config) InitGloabl() error {
 	}
 	mgoclient = mclient
 	return nil
+}
+
+type Bus struct {
+	Pub bus.PubManager
+	Sub bus.SubManager
 }
 
 type app struct {

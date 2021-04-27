@@ -11,6 +11,7 @@ import (
 
 	"github.com/infraboard/keyauth/client"
 	"github.com/infraboard/mcube/bus"
+	"github.com/infraboard/mcube/bus/broker/kafka"
 	"github.com/infraboard/mcube/bus/broker/nats"
 	"github.com/infraboard/mcube/cache"
 	"github.com/infraboard/mcube/cache/memory"
@@ -100,18 +101,17 @@ func newService(cnf *conf.Config) (*service, error) {
 	grpc := api.NewGRPCService(auther.AuthUnaryServerInterceptor())
 	http := api.NewHTTPService()
 
-	b, err := nats.NewBroker(nats.NewDefaultConfig())
+	bm, err := loadBus()
 	if err != nil {
 		return nil, err
 	}
-	eg := engine.NewEngine(b, pkg.Event)
-
+	eg := engine.NewEngine(bus.S(), pkg.Event)
 	svr := &service{
 		grpc:   grpc,
 		http:   http,
 		engine: eg,
 		log:    zap.L().Named("CLI"),
-		bm:     b,
+		bm:     bm,
 	}
 
 	return svr, nil
@@ -225,6 +225,29 @@ func loadCache() error {
 	}
 
 	return nil
+}
+
+func loadBus() (bus.Manager, error) {
+	c := conf.C()
+	if c.Nats != nil {
+		ns, err := nats.NewBroker(c.Nats)
+		if err != nil {
+			return nil, err
+		}
+		bus.SetSubscriber(ns)
+		return ns, nil
+	}
+
+	if c.Kafka != nil {
+		ks, err := kafka.NewSubscriber(c.Kafka)
+		if err != nil {
+			return nil, err
+		}
+		bus.SetSubscriber(ks)
+		return ks, nil
+	}
+
+	return nil, fmt.Errorf("bus not config, nats or kafka required")
 }
 
 func (s *service) waitSign(sign chan os.Signal) {

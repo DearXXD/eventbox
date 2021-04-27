@@ -1,6 +1,8 @@
 package engine
 
 import (
+	"fmt"
+
 	"github.com/infraboard/mcube/bus"
 	"github.com/infraboard/mcube/bus/event"
 	"github.com/infraboard/mcube/grpc/gcontext"
@@ -37,6 +39,10 @@ func (e *Engine) SetRetryBufSize(s int) {
 }
 
 func (e *Engine) Start() error {
+	if e.b == nil {
+		return fmt.Errorf("global publisher not set")
+	}
+
 	e.l.Info("start engine ...")
 	subT := event.Type_Operate.String()
 	if err := e.b.Sub(subT, e.Hanle); err != nil {
