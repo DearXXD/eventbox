@@ -22,7 +22,7 @@ func (r *request) FindOptions() *options.FindOptions {
 	skip := int64(r.Page.PageSize) * int64(r.Page.PageNumber-1)
 
 	opt := &options.FindOptions{
-		Sort:  bson.D{{Key: "time", Value: -1}},
+		Sort:  bson.D{{Key: "header.time", Value: -1}},
 		Limit: &pageSize,
 		Skip:  &skip,
 	}
