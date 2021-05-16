@@ -1,0 +1,34 @@
+[app]
+name = "eventbox"
+key  = "this is your app key"
+
+[http]
+host = "127.0.0.1"
+port = "8848"
+
+[grpc]
+host = "127.0.0.1"
+port = "18848"
+
+[keyauth]
+host = "xxx"
+port = "18050"
+client_id = "xxx"
+client_secret = "xxx"
+
+[mongodb]
+endpoints = ["xxx:17232"]
+username = "keyauth"
+password = "xxxx"
+database = "keyauth"
+
+[nats]
+servers = ["nats://xxx:14922"]
+user_name = "keyauth"
+password = "xxxx"
+
+[log]
+level = "debug"
+path = "logs"
+format = "text"
+to = "stdout"
