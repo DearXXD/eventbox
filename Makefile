@@ -33,7 +33,7 @@ build: dep ## Build the binary file
 linux: ## Linux build
 	@sh ./script/build.sh linux dist/${PROJECT_NAME} ${MAIN_FILE_PAHT} ${IMAGE_PREFIX} ${PKG}
 	
-run: install codegen dep build ## Run Server
+run: dep build ## Run Server
 	@./dist/${PROJECT_NAME} start
 
 push: ## git push
